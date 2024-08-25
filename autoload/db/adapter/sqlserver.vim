@@ -1,3 +1,9 @@
+let s:column_width = 25
+
+function db#adapter#sqlserver#updateColumnWidth(width) abort
+    let s:column_width = a:width
+endfunction
+
 function! db#adapter#sqlserver#canonicalize(url) abort
   let url = a:url
   if url =~# ';.*=' && url !~# '?'
@@ -45,6 +51,8 @@ function! db#adapter#sqlserver#interactive(url) abort
   let encrypt = get(url.params, 'encrypt', get(url.params, 'Encrypt', ''))
   return (has_key(url, 'password') ? ['env', 'SQLCMDPASSWORD=' . url.password] : []) +
         \ ['sqlcmd', '-S', s:server(url)] +
+        \ ['-v', 'SQLCMDMAXVARTYPEWIDTH=' . s:column_width] +
+        \ ['-v', 'SQLCMDMAXFIXEDTYPEWIDTH=' . s:column_width] +
         \ (empty(encrypt) ? [] : ['-N'] + (encrypt ==# '1' ? [] : [url.params.encrypt])) +
         \ s:boolean_param_flag(url, 'trustServerCertificate', '-C') +
         \ (has_key(url, 'user') ? [] : ['-E']) +
