@@ -7,7 +7,10 @@ function! db#adapter#redis#canonicalize(url) abort
 endfunction
 
 function! db#adapter#redis#interactive(url) abort
-  return ['redis-cli'] + db#url#as_argv(a:url, '-h ', '-p ', '', '', '-a ', '-n ')
+  let cmd = ['redis-cli'] + db#url#as_argv(a:url, '-h ', '-p ', '', '', '-a ', '-n ')
+  call add(cmd, "--no-auth-warning")
+  echom cmd
+  return cmd
 endfunction
 
 function! db#adapter#redis#auth_input() abort
