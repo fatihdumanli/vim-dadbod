@@ -53,6 +53,7 @@ function! db#adapter#sqlserver#interactive(url) abort
         \ ['sqlcmd', '-S', s:server(url)] +
         \ ['-v', 'SQLCMDMAXVARTYPEWIDTH=' . s:column_width] +
         \ ['-v', 'SQLCMDMAXFIXEDTYPEWIDTH=' . s:column_width] +
+        \ ['-I'] +
         \ (empty(encrypt) ? [] : ['-N'] + (encrypt ==# '1' ? [] : [url.params.encrypt])) +
         \ s:boolean_param_flag(url, 'trustServerCertificate', '-C') +
         \ (has_key(url, 'user') ? [] : ['-E']) +
